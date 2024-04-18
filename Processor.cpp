@@ -12,18 +12,19 @@ void ALUoperation(short int encode, short int register[], short int &temp)
 int main()
 {
   auto fptr = fopen("input/ICache.txt","r");
-  unsigned short 
-  int ICache[128];
+  // unsigned short 
+  int ICache[256];
   signed short int DCache[128];
   unsigned int a,b;
   int i=0;
   while(fscanf(fptr,"%x",&a) == 1)
   {
-    // if(i>128)break;
+    ICache[i]=a;
+    i++;
     fscanf(fptr,"%x",&b);
-    a<<8;
-    a+=b;
-    ICache[i] = a;
+    // a<<8;
+    // a+=b;
+    ICache[i] = b;
     i++;
   }
   auto fptr2 = fopen("input/DCache.txt","r");
@@ -43,8 +44,23 @@ int main()
   }
   short int registers[16];
   memset(registers,0,sizeof(registers));
-  int pc = 0;
-  short int temp;
   short int ir;
-  
+  short int irtemp1,irtemp2;
+  int pc=0;
+  int stage=0;
+  short int dest[4];
+
+  while(pc<255)
+  {
+    // irtemp1 = ICache[pc];
+    // irtemp2 = ICache[pc+1];
+    // irtemp1 = irtemp1<<8;
+    // irtemp1 += irtemp2;
+    // ir = irtemp1;
+    // pc+=2;
+    if(stage>=4)
+    {
+      register[dest[0]] = 
+    }
+  }
 }
