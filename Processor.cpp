@@ -2,11 +2,11 @@
 //Malireddi Sri Sai Shanmukh raj CS22B029
 #include<bits/stdc++.h>
 using namespace std;
-void operation(int encode,int A,int B,int C)
+void ALUoperation(short int encode, short int register[], short int &temp)
 {
   if(encode==0)
   {
-
+    register
   }
 }
 int main()
@@ -44,5 +44,7 @@ int main()
   short int registers[16];
   memset(registers,0,sizeof(registers));
   int pc = 0;
-
+  short int temp;
+  short int ir;
+  
 }
