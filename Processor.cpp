@@ -1,6 +1,6 @@
 //K Gireesh CS22B031
 //Malireddi Sri Sai Shanmukh raj CS22B029
-//Scalar Pipeline Processor CS2610 Project
+//Scalar Pipeline Processor Design(Project CS2610)
 #define WB 4
 #define MEM 3
 #define EXE 2
@@ -8,7 +8,6 @@
 #define IF 0
 #include<bits/stdc++.h>
 using namespace std;
-
 int main()
 {
   auto fptr = fopen("input/ICache.txt","r");
@@ -19,7 +18,6 @@ int main()
   int i=0;
   while(fscanf(fptr,"%x",&a) == 1)
   {
-    // if(i>128)break;
     fscanf(fptr,"%x",&b);
     a = a<<8;
     a+=b;
@@ -28,15 +26,12 @@ int main()
   }
   auto fptr2 = fopen("input/DCache.txt","r");
   i=0;
-  //cout << "rridgvov" << endl;
   while(fscanf(fptr2,"%s",argv) == 1)
   {
-    // if(i>128)break;
     string c(argv);
     DCache[i] = static_cast<int8_t>(stoi(c, 0, 16));
     i++;
   }
-  //cout << "rridgvov" << endl;
   int8_t registers[16];
   auto fptr3 = fopen("input/RF.txt","r");
   i=0;
@@ -45,12 +40,12 @@ int main()
     registers[i]=a;
     i++;
   }
-  int pc = 0; //
-  int stage = 0;  //
+  int pc = 0;
+  int stage = 0;
   int LMD;
   int8_t A,B,C;
   int halt_condition = 45000;
-  int halt_signal;    //
+  int halt_signal;
   int source1,source2;
   int data_hazard_stalls = 0;
   int total_stalls = 0;
@@ -61,15 +56,15 @@ int main()
   int load_imm=0;
   int ctrl_inst=0;
   int hlt_inst=0;
-  unsigned short int instruction_fetched;    //
+  unsigned short int instruction_fetched;
   int temp;
   int8_t ALUOutput[5];
   unsigned short int opcode[5];
   int dest[5];
   int imm[5];
-  bool status[5];   //    
-  int dirty[16];      //
-  bool data_hazard = false;   //
+  bool status[5];
+  int dirty[16];
+  bool data_hazard = false;
   memset(status,true,sizeof(status));
   memset(dirty,0,sizeof(dirty));
   while(1){
@@ -81,21 +76,24 @@ int main()
       WRITE BACK STAGE.
        *
       ********/
-    if(stage >= WB && status[WB] && halt_condition >= 2){
-      if(opcode[WB] < 11){
+    if(stage >= WB && status[WB] && halt_condition >= 2)
+    {
+      if(opcode[WB] < 11)
+      {
         registers[dest[WB]] = ALUOutput[WB];  // answer of arthmetic operations or bitwise operations
         dirty[dest[WB]]--;
         //cout << "dest[WB]: " << dest[WB] << " ALUOUTPUT: "<<(int)ALUOutput[WB] << endl;
       }
-      if(opcode[WB] == 11){
+      if(opcode[WB] == 11)
+      {
         registers[dest[WB]] = LMD;    // data fetched from memory stage is stored in LMD.
         dirty[dest[WB]]--;
       }
-      
-    }else{
+    }
+    else
+    {
       if(halt_condition < 2)break;
     }
-
 
 
     /********
@@ -103,15 +101,17 @@ int main()
     MEMORY OPERATIONS STAGE.
       *
     ********/
-    if(stage >= MEM && status[MEM] && halt_condition >= 3){
-      if(opcode[MEM] == 11){
+    if(stage >= MEM && status[MEM] && halt_condition >= 3)
+    {
+      if(opcode[MEM] == 11)
+      {
         LMD = DCache[ALUOutput[MEM]];
       }
-      if(opcode[MEM] == 12){
+      if(opcode[MEM] == 12)
+      {
         DCache[ALUOutput[MEM]] = C;     // source register A
       }
     }
-
 
 
     /******* 
@@ -164,45 +164,59 @@ int main()
             break;
           case 8:
             /*SLLI*/
-            if(imm[EXE] < 8){
+            if(imm[EXE] < 8)
+            {
               ALUOutput[EXE] = A << imm[EXE];
-            }else{
+            }
+            else
+            {
               ALUOutput[EXE] = A >> (16 - imm[EXE]);
             }
             shift_ins++;
             break;
           case 9:
           /*SRLI*/
-           if(imm[EXE] < 8){
+            if(imm[EXE] < 8)
+            {
               ALUOutput[EXE] = A >> imm[EXE];
-            }else{
+            }
+            else
+            {
               ALUOutput[EXE] = A << (16 - imm[EXE]);
             }
             shift_ins++;
             break;
           case 10:
-            if(imm[EXE] < 128){
+            if(imm[EXE] < 128)
+            {
               ALUOutput[EXE] = imm[EXE];
-            }else{
-                  ALUOutput[EXE] = -(256 - imm[EXE]);
-                  ////cout << "immediate at execution stage: " << imm[EXE] << "  " << dest[EXE] << endl;
+            }
+            else
+            {
+              ALUOutput[EXE] = -(256 - imm[EXE]);
             }
             load_imm++;
             break;  // immediate values to be stored.
           case 11:
           /*LD*/
-            if(imm[EXE] < 8){
+            if(imm[EXE] < 8)
+            {
               ALUOutput[EXE] = A + imm[EXE];
-            }else{
+            }
+            else
+            {
               ALUOutput[EXE] = A - (16 - imm[EXE]);
             }
             mem_ins++;
             break;
           case 12:
             /*ST*/
-            if(imm[EXE] < 8){
+            if(imm[EXE] < 8)
+            {
               ALUOutput[EXE] = A + imm[EXE];
-            }else{
+            }
+            else
+            {
               ALUOutput[EXE] = A - (16 - imm[EXE]);
             }
             C = B;
@@ -212,10 +226,13 @@ int main()
             /*JMP*/
             status[IF] = false;
             //cout << "JUMP in execute: " << imm[EXE] << endl;
-            if(imm[EXE] < 128){
-                ALUOutput[EXE] = imm[EXE];
-            }else{
-                ALUOutput[EXE] = -(256 - imm[EXE]);
+            if(imm[EXE] < 128)
+            {
+              ALUOutput[EXE] = imm[EXE];
+            }
+            else
+            {
+              ALUOutput[EXE] = -(256 - imm[EXE]);
             }  // immediate values to be stored.
             pc += ALUOutput[EXE];
             ctrl_inst++;
@@ -226,11 +243,14 @@ int main()
             //cout << "branch in execute: " << imm[EXE] << endl;
             //cout << "A: " << (int)A << endl;
             // //cout << registers[6] << endl;
-            if(A == 0){
-                // to be checked.
-                if(imm[EXE] < 128){
+            if(A == 0)
+            {
+                if(imm[EXE] < 128)
+                {
                     ALUOutput[EXE] = imm[EXE];
-                }else{
+                }
+                else
+                {
                     ALUOutput[EXE] = -(256 - imm[EXE]);
                 }  // immediate values to be stored.
                 pc += ALUOutput[EXE];
@@ -243,10 +263,7 @@ int main()
           default:
             break;
       }
-      //cout << "ALUOuput[EXE] is " << (int)ALUOutput[EXE] << endl;
     }
-
-
 
 
     /******* 
@@ -254,7 +271,8 @@ int main()
     INSTRUCTION DECODE STAGE.
       *
     ********/
-    if(stage >= ID && status[ID] && halt_condition > 5){
+    if(stage >= ID && status[ID] && halt_condition > 5)
+    {
         opcode[ID] = instruction_fetched >> 12;
         //cout<<"Instr in stage ID"<<" "<<(int)instruction_fetched<<endl;
         source1 = (instruction_fetched >> 4) - ((instruction_fetched >> 8) << 4);
@@ -270,27 +288,29 @@ int main()
             case 6:
               /*XOR*/
               dest[ID] = (instruction_fetched >> 8) - ((instruction_fetched >> 12) << 4);
-              if(dirty[source1] == 0 && dirty[source2] == 0){
-                //cout << "source1: " << source1 << " source2: " << source2 << endl;
-              A = registers[source1];
-              B = registers[source2];
-              dirty[dest[ID]]++;
-              }else{
+              if(dirty[source1] == 0 && dirty[source2] == 0)
+              {
+                A = registers[source1];
+                B = registers[source2];
+                dirty[dest[ID]]++;
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
-                //cout << "source1: " << source1 << " source2: " << source2 << endl;
-                //cout << "dirty source1: " << dirty[source1] << " dirty source2: " << dirty[source2] << endl;
               }
-              
               break;
             case 3:
             /*INC*/
               dest[ID] = (instruction_fetched >> 8) - ((instruction_fetched >> 12) << 4);
-              if(dirty[dest[ID]] == 0){
+              if(dirty[dest[ID]] == 0)
+              {
                 A = registers[dest[ID]];
                 dirty[dest[ID]]++;
-              }else{
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
@@ -303,11 +323,14 @@ int main()
             case 9:
             /*SRLI*/
               dest[ID] = (instruction_fetched >> 8) - ((instruction_fetched >> 12) << 4);
-              if(dirty[source1] == 0){
+              if(dirty[source1] == 0)
+              {
                 A = registers[source1];
                 imm[ID] = source2;
                 dirty[dest[ID]]++;
-              }else{
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
@@ -325,11 +348,14 @@ int main()
               dest[ID] = (instruction_fetched >> 8) - ((instruction_fetched >> 12) << 4);
               // A = registers[source1];
               // imm[ID] = source2;
-              if(dirty[source1] == 0){
+              if(dirty[source1] == 0)
+              {
                 A = registers[source1];
                 imm[ID] = source2;
                 dirty[dest[ID]]++;
-              }else{
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
@@ -342,11 +368,14 @@ int main()
               dest[ID] = -1;                     // to avoid false data dependencies.
               // A = registers[source1];
               // imm[ID] = source2;
-              if(dirty[temp] == 0 && dirty[source1] == 0){
+              if(dirty[temp] == 0 && dirty[source1] == 0)
+              {
                 B = registers[temp];
                 A = registers[source1];
                 imm[ID] = source2;
-              }else{
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
@@ -372,7 +401,9 @@ int main()
                 //cout << (int)registers[temp] << endl;
                 dest[ID] = -1;                   // to avoid false data dependencies.
                 status[IF] = false;
-              }else{
+              }
+              else
+              {
                 status[IF] = false;
                 status[ID] = false;
                 data_hazard = true;
@@ -393,11 +424,14 @@ int main()
     INSTRUCTION FETCH STAGE.
       *
     ********/
-    if(stage >= IF && status[IF] && halt_condition > 5){
+    if(stage >= IF && status[IF] && halt_condition > 5)
+    {
       instruction_fetched = ICache[pc];
       //cout<<"instruction_fetched: "<<" "<<instruction_fetched<<endl;
       pc += 1;
-    }else{
+    }
+    else
+    {
       if(data_hazard){
       status[IF] = true;
       data_hazard = false;
@@ -411,7 +445,8 @@ int main()
 
     stage++;
     halt_condition--;
-    for(int i = 4;i > 0;i--){
+    for(int i = 4;i > 0;i--)
+    {
       opcode[i] = opcode[i-1]; 
       dest[i] = dest[i-1]; 
       //if(dest[i] == 5)////cout << "pc: " << pc << "reg5: " << registers[5] << "\n";
@@ -421,23 +456,11 @@ int main()
       ALUOutput[i] = ALUOutput[i-1];
     }
     status[IF] = true;
-    ////cout<<"Opcode:"<<opcode[2]<<endl;
-    //if(pc>=25) break;
-    for(int i = 0;i < 16;i++){
-      //cout << "    "  << i ;
-    }
-    //cout << endl;
-    for(int i =0;i < 16;i++){
+    for(int i =0;i < 16;i++)
+    {
       printf("%5d", dirty[i]);
     }
-    //cout << "data_hazard: " << data_hazard << endl;
-    //cout << "pc: " << pc << endl;
-    //cout << endl << endl << endl;
   }
-
-
-
-  ////cout<<ICache[0]<<" "<<ICache[1]<<endl;
   auto ptrf = fopen("output/RF.txt","w");
   for(int i=0;i<16;i++)
   {
