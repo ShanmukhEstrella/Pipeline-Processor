@@ -6,4 +6,4 @@ g++ Processor.cpp
 
 ./a.out > Output.txt   
 
-#Output file is the file on to whcih we write our output
+#Output file is the file on to which we write our output
