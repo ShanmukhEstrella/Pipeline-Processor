@@ -1,16 +1,16 @@
 //K Gireesh CS22B031
 //Malireddi Sri Sai Shanmukh raj CS22B029
 //Scalar Pipeline Processor Design(Project CS2610)
-#define WB 4
-#define MEM 3
-#define EXE 2
-#define ID 1
-#define IF 0
+#define WB 4       //Write Back stage hashdefined with 4
+#define MEM 3      //Mem operation stage hashdefined with 3
+#define EXE 2      //Executed stage hashdefined with 2
+#define ID 1       //Instruction decode stage hash defined with 1
+#define IF 0       //Instruction fetch stage hash defined with 0
 #include<bits/stdc++.h>
 using namespace std;
 int main()
 {
-  auto fptr = fopen("input/ICache.txt","r");
+  auto fptr = fopen("input/ICache.txt","r");   //Opening the ICcahe.txt file in input directory in read only mode.
   unsigned short int ICache[128];
   int8_t DCache[256];
   unsigned int a,b;
