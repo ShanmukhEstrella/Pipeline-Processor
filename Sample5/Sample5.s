@@ -1,0 +1,11 @@
+LI R1, 1, 7 
+LI R2, 0, 7
+LD R2, R2, 9
+LD R1, R1, 8
+BEQZ R1, 0, 3
+SRLI R1, R1, 1
+ADD R2, R2, R1
+JMP f, c
+ST R1, R0, 0
+ST R2, R0, 1
+HLT
