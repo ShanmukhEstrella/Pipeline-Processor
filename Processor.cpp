@@ -456,10 +456,10 @@ int main()
       ALUOutput[i] = ALUOutput[i-1];
     }
     status[IF] = true;
-    for(int i =0;i < 16;i++)
-    {
-      printf("%5d", dirty[i]);
-    }
+    // for(int i =0;i < 16;i++)
+    // {
+    //   printf("%5d", dirty[i]);
+    // }
   }
   auto ptrf = fopen("output/RF.txt","w");
   for(int i=0;i<16;i++)
